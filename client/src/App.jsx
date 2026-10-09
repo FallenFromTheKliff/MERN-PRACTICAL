@@ -6,7 +6,7 @@ function App() {
   const [name, setName] = useState("");
   const [course, setCourse] = useState("");
   const [age, setAge] = useState("");
-  const [edit, setEdit] = useState(null);
+  const [edit, setEdit] = useState(false);
 
   useEffect(() => {
     axios
@@ -18,50 +18,31 @@ function App() {
 
   const handleSubmit = async () => {
     const studata = { name: name, course: course, age: age };
-    if (edit) {
-      await axios.put(`http://localhost:5000/students/${edit}`, studata);
-    } else {
-      await axios.post("http://localhost:5000/students", studata);
-    }
+    await axios.post("http://localhost:5000/students", studata);
 
     setName("");
     setCourse("");
     setAge("");
     setEdit(null);
-    axios
-      .get("http://localhost:5000/students")
-      .then((response) => {
-        setStudents(response.data);
-      })
   }
 
-  const handleEdit = (student) => {
-    setEdit(student._id);
+  const handleEdit = async (student) => {
     setName(student.name);
     setCourse(student.course);
     setAge(student.age);
-    axios
-      .get("http://localhost:5000/students")
-      .then((response) => {
-        setStudents(response.data);
-      })
+    setEdit(false);
   }
 
   const handleDelete = async (id) => {
-    await axios.delete(`http://localhost:5000/students/${id}`);
-    axios
-      .get("http://localhost:5000/students")
-      .then((response) => {
-        setStudents(response.data);
-      })
+    await axios.delete("http://localhost:5000/students/" + id);
   }
 
   return (
     <div className="flex flex-col min-h-screen items-center bg-slate-800">
-      <div className="flex flex-col bg-white border-4 mt-4 mb-4 p-4">
+      <div className="flex flex-col bg-white border-2 mt-4 mb-4 p-4">
         <h1 className="text-7xl bold">Student Management System</h1>
       </div>
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+      <form onSubmit={edit ? handleEdit(students) : handleSubmit} className="flex flex-col gap-4">
         <input 
           placeholder="Student Name"
           type="text"
@@ -84,19 +65,19 @@ function App() {
           className="w-full bg-white px-2 py-2"
         />
         <button type="submit" className="text-xl font-bold w-full bg-white px-2 py-2 cursor-pointer transition hover:brightness-50">
-          SUBMIT
+          {edit ? "UPDATE" : "SUBMIT"}
         </button>
       </form>
 
-      <h2 className="text-white text-2xl mt-4 mb-4">STUDENTS</h2>
-      <div className="flex flex-row">
+      <h2 className="text-white text-2xl mt-8 mb-4">STUDENTS</h2>
+      <div className="flex flex-row gap-1">
         {students.map((student) => (
-          <div className="flex flex-col bg-white border-4 p-4" key={student.id}>
+          <div className="flex flex-col bg-white border-2 p-4" key={student.id}>
             <p>Name: {student.name}</p>
             <p>Course: {student.course}</p>
             <p>Age: {student.age}</p>
-            <button onClick={handleEdit}>EDIT</button>
-            <button onClick={handleDelete}>DELETE</button>
+            <button onClick={handleEdit} className="text-xl font-bold w-full bg-white px-2 py-2 cursor-pointer transition hover:brightness-50">EDIT</button>
+            <button onClick={handleDelete} className="text-xl font-bold w-full bg-white px-2 py-2 cursor-pointer transition hover:brightness-50">DELETE</button>
           </div>
         ))}
       </div>
