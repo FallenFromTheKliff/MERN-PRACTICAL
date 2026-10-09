@@ -33,12 +33,12 @@ app.post("/students", async (req, res) => {
 });
 
 app.put("/students/:id", async (req, res) => {
-  const updater = await Student.findByIdAndUpdate(req.params._id, req.body);
+  const updater = await Student.findByIdAndUpdate(req.params.id, req.body);
   res.json(updater);
 });
 
 app.delete("/students/:id", async (req, res) => {
-  const deleter = await Student.findByIdAndDelete(req.params._id);
+  const deleter = await Student.findByIdAndDelete(req.params.id);
   res.json(deleter);
 });
 
