@@ -28,21 +28,17 @@ app.get("/students", async (req, res) => {
 });
 
 app.post("/students", async (req, res) => {
-  const student = new Student({
-    name: req.body.name,
-    course: req.body.course,
-    age: req.body.age
-  })
+  const student = await Student.create(req.body)
   res.json(student);
 });
 
 app.put("/students/:id", async (req, res) => {
-  const updater = await Student.findByIdAndUpdate(req.params.id, req.body);
+  const updater = await Student.findByIdAndUpdate(req.params._id, req.body);
   res.json(updater);
 });
 
 app.delete("/students/:id", async (req, res) => {
-  const deleter = await Student.findByIdAndDelete(req.params.id);
+  const deleter = await Student.findByIdAndDelete(req.params._id);
   res.json(deleter);
 });
 
