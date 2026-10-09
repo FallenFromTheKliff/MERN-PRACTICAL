@@ -23,14 +23,14 @@ function App() {
     setName("");
     setCourse("");
     setAge("");
-    setEdit(null);
+    setEdit(false);
   }
 
   const handleEdit = async (student) => {
     setName(student.name);
     setCourse(student.course);
     setAge(student.age);
-    setEdit(false);
+    setEdit(true);
   }
 
   const handleDelete = async (id) => {
@@ -42,7 +42,7 @@ function App() {
       <div className="flex flex-col bg-white border-2 mt-4 mb-4 p-4">
         <h1 className="text-7xl bold">Student Management System</h1>
       </div>
-      <form onSubmit={edit ? handleEdit(students) : handleSubmit} className="flex flex-col gap-4">
+      <form onSubmit={edit ? handleEdit() : handleSubmit} className="flex flex-col gap-4">
         <input 
           placeholder="Student Name"
           type="text"
